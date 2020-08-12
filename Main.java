@@ -34,6 +34,7 @@ public class Main {
             scan.nextLine();
         }
 
+        // Sort by A point
         Collections.sort(lines, new Comparator<Line>(){
             @Override
             public int compare(Line line1, Line line2){
@@ -43,27 +44,25 @@ public class Main {
             }
         });
 
-        
+        // Apply LIS Algorithm at B sequence
         Value[] values = new Value[N];
-        Value tmpValue;
+        Value tmpValue, maxValue;
         values[N-1] = new Value(lines.get(N-1).pointB, 1);
         
         for(int i = N-2; i >= 0; i--){
             
-            if(values[i+1].firstNum > lines.get(i).pointB){
-                values[i] = new Value(lines.get(i).pointB, values[i+1].value + 1);
-                
-            }else{
-                tmpValue = values[i+1];
-                for(int j = i + 2; j < N; j++){
-                    if(values[j].firstNum > lines.get(i).pointB){
-                        tmpValue = (tmpValue.value < values[j].value + 1) ? new Value(lines.get(i).pointB, values[j].value + 1) :
-                                    (tmpValue.value == values[j].value + 1 && lines.get(i).pointB > tmpValue.firstNum) ? new Value(lines.get(i).pointB, values[j].value + 1) : tmpValue;
+            maxValue = values[i+1];
+            for(int j = i + 1; j < N; j++){
+                if(values[j].firstNum > lines.get(i).pointB){
+                    tmpValue = new Value(lines.get(i).pointB, values[j].value + 1);
 
-                    }
+                    maxValue = (maxValue.value < tmpValue.value) ? tmpValue :
+                                (maxValue.value == tmpValue.value && tmpValue.firstNum > maxValue.firstNum) ? tmpValue : maxValue;
+
                 }
-                values[i] = tmpValue;
             }
+            values[i] = maxValue;
+            
         }
         System.out.println(lines.size() - values[0].value);
     }
