@@ -43,28 +43,31 @@ public class Main {
                 return -1;
             }
         });
-
-        // Apply LIS Algorithm at B sequence
-        Value[] values = new Value[N];
-        Value tmpValue, maxValue;
-        values[N-1] = new Value(lines.get(N-1).pointB, 1);
         
-        for(int i = N-2; i >= 0; i--){
-            
-            maxValue = values[i+1];
-            for(int j = i + 1; j < N; j++){
-                if(values[j].firstNum > lines.get(i).pointB){
-                    tmpValue = new Value(lines.get(i).pointB, values[j].value + 1);
+        ArrayList<Integer> bPoints = new ArrayList<>();
+        
+        for(int i=0;i<N;i++) bPoints.add(lines.get(i).pointB);
+        
+        System.out.println(N-LIS(bPoints));
+        
 
-                    maxValue = (maxValue.value < tmpValue.value) ? tmpValue :
-                                (maxValue.value == tmpValue.value && tmpValue.firstNum > maxValue.firstNum) ? tmpValue : maxValue;
-
-                }
-            }
-            values[i] = maxValue;
-            
-        }
-        System.out.println(lines.size() - values[0].value);
+    }
+    // Apply LIS Algorithm at B sequence
+    public static int LIS(ArrayList<Integer> arr){
+    	int returnLength = 0;
+    	ArrayList<Integer> tmpArr;
+    	
+    	if (arr.size() == 1) return 1;
+    	
+    	for(int i= 0;i<arr.size();i++) {
+    		tmpArr = new ArrayList<>();
+    		
+    		for(int j=i+1;j<arr.size();j++) {
+    			if(arr.get(i) < arr.get(j)) tmpArr.add(arr.get(j));
+    		}
+    		returnLength = Math.max(returnLength,1+LIS(tmpArr));
+    	}
+    	return returnLength;
     }
     
 }
